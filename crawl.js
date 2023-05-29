@@ -1,10 +1,21 @@
 const { JSDOM } = require("jsdom");
 
 // function to crawl page
-async function crawlPage(currentURL) {
+async function crawlPage(baseURL, currentURL, pages) {
+  const baseURLObj = new URL(baseURL);
+  const currentURLObj = new URL(currentURL);
+  if (baseURLObj.hostname !== currentURLObj.hostname) return pages;
+  const normalizedCurrentURL = normalizeURL(currentURL);
+  if (normalizedCurrentURL in pages) {
+    pages[normalizedCurrentURL] += 1;
+    return pages;
+  }
+  pages[normalizedCurrentURL] = 1;
+
+  console.log(`Actively crawling: ${currentURL}`);
+
   try {
     const res = await fetch(currentURL);
-
     if (res.status > 399)
       throw new Error(`Error in fetch with status code:${res.status}`);
 
@@ -12,11 +23,16 @@ async function crawlPage(currentURL) {
     const contentType = res.headers.get(`content-type`);
     if (!contentType || !contentType.includes("text/html"))
       throw new Error(`Invalid content type: Non-HTML response`);
-    const page = await res.text();
-    console.log(page);
+    const htmlBody = await res.text();
+    const nextUrls = getURLsFromHTML(htmlBody, baseURL);
+    for (const nextUrl of nextUrls) {
+      pages = await crawlPage(baseURL, nextUrl, pages);
+    }
   } catch (err) {
     console.log(`ERROR: ${err.message}`);
+    return pages;
   }
+  return pages;
 }
 
 // function to normalize the url
@@ -53,6 +69,7 @@ function getURLsFromHTML(htmlbody, baseURL) {
       }
     }
   }
+  // console.log(urls);
   return urls;
 }
 

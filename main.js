@@ -1,10 +1,16 @@
 const { crawlPage } = require("./crawl");
 
-function main() {
+async function main() {
   if (process.argv.length < 3 || process.argv.length > 3) return;
   const baseURL = process.argv[2];
-  console.log(`Crawler is starting at the ${process.argv[2]}`);
-  crawlPage(baseURL);
+  if (!baseURL.includes("http")) {
+    console.log(`Add proper url with http//:`);
+    return;
+  }
+  const pages = await crawlPage(baseURL, baseURL, {});
+  for (const page of Object.entries(pages)) {
+    console.log(page);
+  }
 }
 
 main();
