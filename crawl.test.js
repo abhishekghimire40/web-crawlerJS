@@ -1,4 +1,8 @@
-const { normalizeURL, getURLsFromHTML } = require("./crawl.js");
+const {
+  normalizeURL,
+  getURLsFromHTML,
+  checkArguements,
+} = require("./crawl.js");
 const { test, expect } = require("@jest/globals");
 
 // test normalized url
@@ -27,7 +31,7 @@ test("normalize URL strip http/https", () => {
   expect(actual).toEqual(expected);
 });
 
-// test getURLsfromHTML
+// TEST for  getURLsfromHTML
 test("getURLsFromHTML absolute ", () => {
   const input = `<html>
   <body>
@@ -76,4 +80,24 @@ test("getURLsFromHTML invalid url  ", () => {
   const actual = getURLsFromHTML(input, baseURL);
   const expected = [];
   expect(actual).toEqual(expected);
+});
+
+// test for checking number of arguements
+test("checkArguements: none", () => {
+  const input = "npm start";
+  const actual = checkArguements(input);
+  const expected = "invalid";
+  expect(expected).toEqual(actual);
+});
+test("checkArguements: more than one", () => {
+  const input = "npm start https://wagslane.dev extra";
+  const actual = checkArguements(input);
+  const expected = "invalid";
+  expect(expected).toEqual(actual);
+});
+test("checkArguements: exactly one", () => {
+  const input = "npm start https://wagslane.dev";
+  const actual = checkArguements(input);
+  const expected = "crawler starting at https://wagslane.dev";
+  expect(expected).toEqual(actual);
 });
