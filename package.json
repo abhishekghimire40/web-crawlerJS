@@ -1,0 +1,23 @@
+{
+  "name": "web-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhishekghimire/web-crawlerJS.git"
+  },
+  "author": "@AbhishekGhimire",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abhishekghimire/web-crawlerJS/issues"
+  },
+  "homepage": "https://github.com/abhishekghimire/web-crawlerJS#readme",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
